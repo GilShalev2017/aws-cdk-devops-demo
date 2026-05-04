@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.js.map
+*.d.ts
+cdk.out/
+.cdk.staging/
+frontend/build/
+frontend/.env.local
+.env
+*.env.local
+.DS_Store
+*.log

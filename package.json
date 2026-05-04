@@ -1,0 +1,21 @@
+{
+  "name": "aws-cdk-demo",
+  "version": "1.0.0",
+  "description": "AWS CDK Demo - React + Microservices (Lambda, S3, DynamoDB)",
+  "private": true,
+  "workspaces": [
+    "cdk",
+    "lambdas/*",
+    "frontend"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm install --workspace=cdk && npm install --workspace=frontend",
+    "bootstrap": "cd cdk && npx cdk bootstrap",
+    "deploy": "cd cdk && npx cdk deploy --all --require-approval never",
+    "destroy": "cd cdk && npx cdk destroy --all --force",
+    "diff": "cd cdk && npx cdk diff",
+    "synth": "cd cdk && npx cdk synth",
+    "frontend:dev": "cd frontend && npm start",
+    "frontend:build": "cd frontend && npm run build"
+  }
+}
