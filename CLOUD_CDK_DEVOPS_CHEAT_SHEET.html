@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLOUD_CDK_DEVOPS_CHEAT_SHEET</title>
+  <style>
+  @import url("https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css");
+
+  body {
+    font-family: Georgia, Cambria, serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #373D49;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+  h1 { font-size: 2em; }
+  h2 { font-size: 1.5em; }
+  h3 { font-size: 1.25em; }
+  a { color: #35D7BB; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "Ubuntu Mono", Monaco, monospace;
+    background: #F5F7FA;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+  }
+  pre {
+    background: #F5F7FA;
+    padding: 1em;
+    border-radius: 3px;
+    overflow-x: auto;
+  }
+  .hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0;
+    color: #333;
+  }
+  pre code { background: none; padding: 0; }
+  blockquote {
+    border-left: 3px solid #A0AABF;
+    padding-left: 1em;
+    margin-left: 0;
+    font-style: italic;
+    color: #666;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #E8E8E8;
+    padding: 0.5em;
+    text-align: left;
+  }
+  th {
+    background: #F5F7FA;
+    font-weight: 600;
+  }
+  #preview .table {
+    width: auto;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+</style>
+</head>
+<body id="preview">
+<h1 class="code-line has-line-data" data-line-start="0" data-line-end="1"><a id="CDK_Stacks_Cheat_Sheet_Deployment_Actions_0"></a>CDK Stacks Cheat Sheet - Deployment Actions</h1>
+<h2 class="code-line has-line-data" data-line-start="2" data-line-end="3"><a id="1_StorageStack_Foundation_Layer_2"></a><strong>1. StorageStack</strong> - Foundation Layer</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="4"><strong>Purpose</strong>: Creates data storage resources</p>
+<pre><code class="has-line-data language-typescript" data-line-start="5" data-line-end="11"><span class="hljs-comment">// Main Actions:</span>
+- <span class="hljs-title class_">Creates</span> <span class="hljs-title class_">DynamoDB</span> <span class="hljs-title function_">tables</span> (products, orders, users) <span class="hljs-keyword">with</span> on-demand billing
+- <span class="hljs-title class_">Creates</span> <span class="hljs-variable constant_">S3</span> bucket <span class="hljs-keyword">for</span> file <span class="hljs-title function_">uploads</span> (assets)
+- <span class="hljs-title class_">Sets</span> up removal policies <span class="hljs-keyword">for</span> demo cleanup
+- <span class="hljs-title class_">Outputs</span> table names and bucket <span class="hljs-variable constant_">ARN</span> <span class="hljs-keyword">for</span> other stacks
+</code></pre>
+<p class="has-line-data" data-line-start="12" data-line-end="13"><strong>Key Resources</strong>:</p>
+<ul>
+<li class="has-line-data" data-line-start="13" data-line-end="14"><code>DynamoDBTable</code> ×3 (products, orders, users)</li>
+<li class="has-line-data" data-line-start="14" data-line-end="16"><code>S3 Bucket</code> (assets storage)</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="18" data-line-end="19"><a id="2_LambdaStack_Business_Logic_Layer_18"></a><strong>2. LambdaStack</strong> - Business Logic Layer</h2>
+<p class="has-line-data" data-line-start="19" data-line-end="20"><strong>Purpose</strong>: Deploys microservice functions</p>
+<pre><code class="has-line-data language-typescript" data-line-start="21" data-line-end="28"><span class="hljs-comment">// Main Actions:</span>
+- <span class="hljs-title class_">Creates</span> <span class="hljs-title class_">Lambda</span> <span class="hljs-title function_">functions</span> (products, orders, users services)
+- <span class="hljs-title class_">Grants</span> <span class="hljs-variable constant_">IAM</span> <span class="hljs-attr">permissions</span>: read/write to <span class="hljs-title class_">DynamoDB</span> tables
+- <span class="hljs-title class_">Grants</span> <span class="hljs-variable constant_">S3</span> <span class="hljs-title function_">permissions</span> (products <span class="hljs-title class_">Lambda</span> needs file upload access)
+- <span class="hljs-title class_">Uses</span> common <span class="hljs-title function_">configuration</span> (runtime, memory, timeout)
+- <span class="hljs-title class_">Outputs</span> <span class="hljs-keyword">function</span> <span class="hljs-title class_">ARNs</span> <span class="hljs-keyword">for</span> <span class="hljs-variable constant_">API</span> <span class="hljs-title class_">Gateway</span> integration
+</code></pre>
+<p class="has-line-data" data-line-start="29" data-line-end="30"><strong>Key Resources</strong>:</p>
+<ul>
+<li class="has-line-data" data-line-start="30" data-line-end="31"><code>Lambda Function</code> ×3 (Node.js 18.x, 256MB, 30s timeout)</li>
+<li class="has-line-data" data-line-start="31" data-line-end="33"><code>IAM Policies</code> (DynamoDB + S3 access)</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="35" data-line-end="36"><a id="3_ApiStack_API_Layer_35"></a><strong>3. ApiStack</strong> - API Layer</h2>
+<p class="has-line-data" data-line-start="36" data-line-end="37"><strong>Purpose</strong>: Creates REST API endpoints</p>
+<pre><code class="has-line-data language-typescript" data-line-start="38" data-line-end="46"><span class="hljs-comment">// Main Actions:</span>
+- <span class="hljs-title class_">Creates</span> <span class="hljs-variable constant_">API</span> <span class="hljs-title class_">Gateway</span> <span class="hljs-variable constant_">REST</span> <span class="hljs-variable constant_">API</span> <span class="hljs-keyword">with</span> stage <span class="hljs-string">&#x27;v1&#x27;</span>
+- <span class="hljs-title class_">Sets</span> up <span class="hljs-title class_">CloudWatch</span> logging role
+- <span class="hljs-title class_">Configures</span> <span class="hljs-variable constant_">CORS</span> <span class="hljs-keyword">for</span> all origins
+- <span class="hljs-title class_">Creates</span> resource <span class="hljs-attr">structure</span>: <span class="hljs-regexp">/api/</span>{products,orders,users}/{id}
+- <span class="hljs-title class_">Integrates</span> each endpoint <span class="hljs-keyword">with</span> corresponding <span class="hljs-title class_">Lambda</span>
+- <span class="hljs-title class_">Outputs</span> <span class="hljs-variable constant_">API</span> <span class="hljs-variable constant_">URL</span> and endpoint <span class="hljs-title class_">URLs</span>
+</code></pre>
+<p class="has-line-data" data-line-start="47" data-line-end="48"><strong>Key Resources</strong>:</p>
+<ul>
+<li class="has-line-data" data-line-start="48" data-line-end="49"><code>REST API</code> (stage: v1)</li>
+<li class="has-line-data" data-line-start="49" data-line-end="50"><code>Lambda Integrations</code> ×3</li>
+<li class="has-line-data" data-line-start="50" data-line-end="51"><code>CORS Configuration</code></li>
+<li class="has-line-data" data-line-start="51" data-line-end="53"><code>CloudWatch Role</code></li>
+</ul>
+<p class="has-line-data" data-line-start="53" data-line-end="54"><strong>API Routes</strong>:</p>
+<pre><code class="has-line-data" data-line-start="55" data-line-end="65">GET/POST    /api/products
+GET/PUT/DEL /api/products/{id}
+GET          /api/products/{id}/upload-url
+
+GET/POST    /api/orders  
+GET/PUT/DEL /api/orders/{id}
+
+GET/POST    /api/users
+GET/PUT/DEL /api/users/{id}
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="68" data-line-end="69"><a id="4_FrontendStack_Presentation_Layer_68"></a><strong>4. FrontendStack</strong> - Presentation Layer</h2>
+<p class="has-line-data" data-line-start="69" data-line-end="70"><strong>Purpose</strong>: Deploys React app with CDN</p>
+<pre><code class="has-line-data language-typescript" data-line-start="71" data-line-end="82"><span class="hljs-comment">// Main Actions:</span>
+- <span class="hljs-title class_">Creates</span> <span class="hljs-keyword">private</span> <span class="hljs-variable constant_">S3</span> bucket <span class="hljs-keyword">for</span> <span class="hljs-keyword">static</span> hosting
+- <span class="hljs-title class_">Creates</span> <span class="hljs-title class_">Origin</span> <span class="hljs-title class_">Access</span> <span class="hljs-title class_">Control</span> (<span class="hljs-variable constant_">OAC</span>) <span class="hljs-keyword">for</span> secure <span class="hljs-variable constant_">S3</span> access
+- <span class="hljs-title class_">Creates</span> <span class="hljs-title class_">CloudFront</span> distribution <span class="hljs-attr">with</span>:
+  * <span class="hljs-variable constant_">S3</span> origin <span class="hljs-keyword">for</span> <span class="hljs-keyword">static</span> <span class="hljs-title function_">files</span> (<span class="hljs-title class_">React</span> app)
+  * <span class="hljs-variable constant_">HTTP</span> origin <span class="hljs-keyword">for</span> <span class="hljs-variable constant_">API</span> <span class="hljs-title class_">Gateway</span> <span class="hljs-title function_">proxy</span> (<span class="hljs-regexp">/api/</span>*)
+  * <span class="hljs-title class_">Custom</span> error <span class="hljs-title function_">handling</span> (<span class="hljs-variable constant_">SPA</span> routing)
+- <span class="hljs-title class_">Adds</span> bucket policy <span class="hljs-keyword">for</span> <span class="hljs-title class_">CloudFront</span> <span class="hljs-variable constant_">OAC</span> access
+- <span class="hljs-title class_">Deploys</span> <span class="hljs-title class_">React</span> build files to <span class="hljs-variable constant_">S3</span>
+- <span class="hljs-title class_">Outputs</span> <span class="hljs-title class_">CloudFront</span> <span class="hljs-variable constant_">URL</span>
+</code></pre>
+<p class="has-line-data" data-line-start="83" data-line-end="84"><strong>Key Resources</strong>:</p>
+<ul>
+<li class="has-line-data" data-line-start="84" data-line-end="85"><code>S3 Bucket</code> (static hosting)</li>
+<li class="has-line-data" data-line-start="85" data-line-end="86"><code>CloudFront Distribution</code> (CDN + API proxy)</li>
+<li class="has-line-data" data-line-start="86" data-line-end="87"><code>Origin Access Control</code> (secure S3 access)</li>
+<li class="has-line-data" data-line-start="87" data-line-end="89"><code>Bucket Deployment</code> (React build sync)</li>
+</ul>
+<p class="has-line-data" data-line-start="89" data-line-end="90"><strong>CloudFront Behaviors</strong>:</p>
+<pre><code class="has-line-data" data-line-start="91" data-line-end="94">Default: S3 → React static files
+/api/*:   HTTP Origin → API Gateway (stage v1)
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="97" data-line-end="98"><a id="Deployment_Order_Dependencies_97"></a><strong>Deployment Order (Dependencies)</strong></h2>
+<pre><code class="has-line-data" data-line-start="99" data-line-end="104">1. StorageStack (no dependencies)
+2. LambdaStack (depends on StorageStack)
+3. ApiStack (depends on LambdaStack)  
+4. FrontendStack (depends on ApiStack)
+</code></pre>
+<h2 class="code-line has-line-data" data-line-start="105" data-line-end="106"><a id="Key_Integration_Points_105"></a><strong>Key Integration Points</strong></h2>
+<ul>
+<li class="has-line-data" data-line-start="106" data-line-end="107"><strong>Storage → Lambda</strong>: Table names passed as props</li>
+<li class="has-line-data" data-line-start="107" data-line-end="108"><strong>Lambda → API</strong>: Function ARNs used for integrations</li>
+<li class="has-line-data" data-line-start="108" data-line-end="109"><strong>API → Frontend</strong>: API URL passed for CloudFront proxy</li>
+<li class="has-line-data" data-line-start="109" data-line-end="111"><strong>Frontend → S3</strong>: React build deployed via BucketDeployment</li>
+</ul>
+<h2 class="code-line has-line-data" data-line-start="111" data-line-end="112"><a id="Architecture_Pattern_111"></a><strong>Architecture Pattern</strong></h2>
+<p class="has-line-data" data-line-start="112" data-line-end="113"><strong>3-Tier Serverless Architecture</strong>:</p>
+<ul>
+<li class="has-line-data" data-line-start="113" data-line-end="114"><strong>Data Layer</strong>: DynamoDB + S3</li>
+<li class="has-line-data" data-line-start="114" data-line-end="115"><strong>Logic Layer</strong>: Lambda microservices</li>
+<li class="has-line-data" data-line-start="115" data-line-end="117"><strong>Presentation Layer</strong>: React + CloudFront + API Gateway</li>
+</ul>
+<p class="has-line-data" data-line-start="117" data-line-end="118">Perfect for DevOps interview - shows understanding of serverless patterns, CI/CD, infrastructure as code!</p>
+
+</body>
+</html>

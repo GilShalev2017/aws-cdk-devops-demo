@@ -49,19 +49,6 @@ export class FrontendStack extends cdk.Stack {
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
       },
-      // additionalBehaviors: {
-      //   "/api/*": {
-      //     origin: new origins.HttpOrigin(apiDomain, {
-      //       protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
-      //     }),
-      //     viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-      //     allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-      //     cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-      //     // Prevents Host header forwarding which breaks API Gateway
-      //     originRequestPolicy:
-      //       cloudfront.OriginRequestPolicy.USER_AGENT_REFERER_HEADERS,
-      //   },
-      // },
       additionalBehaviors: {
         "/api/*": {
           // CHANGE 1: Use RestApiOrigin or ensure HttpOrigin has the correct originPath
